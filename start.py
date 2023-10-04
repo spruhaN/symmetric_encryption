@@ -3,13 +3,20 @@ from Crypto.Random import get_random_bytes
 
 
 
+def start():
+    # Take in file 
+    file = "mustang.bmp"
 
-# We will keep this key secret 
-key = get_random_bytes(128) 
-cipher = AES.new(key, AES.MODE_CBC)
+    # Convert into plain text 
 
-# take in plaintext file 
-# generate random key 
+    # Generating random key 
+    key = get_random_bytes(128) 
+    cipher = AES.new(key, AES.MODE_CBC)
+
+    # Remove header 
+
+    # Call function 
+
 # general function area - take in file, make key
 # before sending file + remove header 
 # call function ECB or CBC 
@@ -32,3 +39,6 @@ cipher = AES.new(key, AES.MODE_CBC)
 # generate random IV (case of CBC )
 
 # write encryption of plaintext into new file 
+
+if __name__ == "__start__":
+    start()
