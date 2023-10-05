@@ -31,6 +31,29 @@ def ecb(data, header):
     with open("output_ecb", 'wb') as output:
         output.write(encrypted_text) # rewrite encryption in a new file 
 
+
+# are they looking for something more like this?
+# def encrypt_ecb(plaintext, key):
+#     ciphertext = []
+#     for block in plaintext_blocks:
+#         encrypted_block = aes_128_encrypt(block, key)
+#         ciphertext.append(encrypted_block)
+#     return ciphertext
+
+# def encrypt_cbc(plaintext, key, iv):
+#     ciphertext = []
+#     previous_block = iv
+#     for block in plaintext_blocks:
+#         # XOR current plaintext block with previous ciphertext block (or IV)
+#         xor_result = xor(block, previous_block)
+#         # Encrypt the XOR result using AES-128
+#         encrypted_block = aes_128_encrypt(xor_result, key)
+#         ciphertext.append(encrypted_block)
+#         # Set the previous ciphertext block to the current encrypted block
+#         previous_block = encrypted_block
+#     return ciphertext
+
+
 # Function 2: Ciphertext Block Chaining (CBC)
 # Each plaintext block gets XOR-ed with previous ciphertext block prior to encryption
 def cbc(data, header):
