@@ -27,7 +27,7 @@ def ecb(data, header):
     # re-append the plaintext BMP headers
     encrypted_text = header + encrypted_text # so not the way to do this but same idea
 
-    with open("output_ecb", 'wb') as output:
+    with open("output_ecb.bmp", 'wb') as output:
         output.write(encrypted_text) # rewrite encryption in a new file 
 
 
@@ -64,7 +64,7 @@ def cbc(data, header):
     # re-append the plaintext BMP headers
     encrypted_text = header + encrypted_text # so not the way to do this but same idea
 
-    with open("output_ecb", 'wb') as output:
+    with open("output_ecb.bmp", 'wb') as output:
         output.write(encrypted_text) # rewrite encryption in a new file 
 
 if __name__ == "__start__":
