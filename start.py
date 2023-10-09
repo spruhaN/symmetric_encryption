@@ -5,13 +5,12 @@ from Crypto.Util.Padding import pad
 
 def start():
     # Read in file as plain text 
-    with open("mustang.bmp", 'rb') as file:
-        data = file.read()
 
-    # Remove header and get header info
-    # grab header to get meta data and to ensure no encryption of header
-    header = "    "
-    # @ spru need help 
+    with open('mustang.bmp', 'rb') as file:
+    # Read the first 6 bytes (52 bits) from the file as the header
+    header = file.read(header_length_bits // 8)
+    # Read the rest of the file into another variable
+    data = file.read()
 
     ecb(data, header) 
     # or cbc(data, header)
