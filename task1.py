@@ -14,6 +14,9 @@ def start():
         ecb(data, header) 
         cbc(data, header)
 
+
+# SPRUUUUU does the cbc and ecb output look correct I'm not so sure? 
+
 # Function 1: Electronic CodeBook (ECB) 
 # Each block of 128 bytes encrypted independently
 def ecb(data, header):

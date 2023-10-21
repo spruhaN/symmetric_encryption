@@ -6,6 +6,8 @@ from Crypto.Util.Padding import pad
 key = get_random_bytes(16)
 iv = get_random_bytes(16)
 
+
+# THIS NEEDS WORK I started but need help finishing - I had to step back and go study
 def submit(input_string):
     # URL encode any ‘;’ and ‘=’ characters that appear in the user provided string
     newStr = ""
@@ -34,6 +36,9 @@ def submit(input_string):
     return cipher_text
 
 def update(cipher_text):
+    # need to find a way to modify the ciphertext in such a way that, after decryption?/
+    # How do i do this?? 
+    # need help
     cipher_text[16] ^= 1 
     return 
 
@@ -48,20 +53,12 @@ def verify(decryptStr):
     return ";admin=true;" in paddedStr
     # parse string for pattern: ";admin=true;"
 
+if __name__ == "__main__":
+    input = "You’re the man now, dog"
+    cipher = submit(input)
+    result = verify(input)
+    print(result)   # should be false
 
-cipher_text =
-
-
-
-Now the fun part: use your knowledge of the way CBC 
-mode works to modify the ciphertext returned by 
-submit() to get verify() to return true.
-
-Hint: Flipping one bit in ciphertext block ci will result 
-in a scrambled plaintext block mi, but, will flip the 
-same bit in plaintext block mi+1.
-
-Why was this attack possible? What would this scheme need in order to prevent such an attack?
-
-if __name__ == "__start__":
-    begin()
+    modified_ciper = update(cipher)
+    result = verify(input)
+    print(result)   # should be true
