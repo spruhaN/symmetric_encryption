@@ -21,6 +21,10 @@ def ecb(data, header):
 
     # thinking this is not the way he wanted us to do this??
     key = get_random_bytes(16) # Generating random key of 16 bytes or 128 bits 
+    ciphertext = []
+    for 0 in range(len(dataLen))
+
+    # only give it one block at a time okay c
     cipher = AES.new(key, AES.MODE_ECB) # Instance of AES cipher algorithm for CBC 
     encrypted_text = cipher.encrypt(pad(data, AES.block_size)) # PKCS#7 padding data
 
@@ -66,6 +70,8 @@ def cbc(data, header):
 
     with open("output_ecb.bmp", 'wb') as output:
         output.write(encrypted_text) # rewrite encryption in a new file 
+
+
 
 if __name__ == "__start__":
     start()
