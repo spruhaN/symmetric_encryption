@@ -23,34 +23,24 @@ def submit(input_string):
     finalStr = "userid=456;userdata=" + newStr + ";session-id=31337"
 
     # pad the final string (using PKCS#7)
-    paddedStr = pad(finalStr, AES.block_size)
+    paddedStr = pad(bytes(finalStr), AES.block_size)
 
     # encrypt the padded string using AES-128-CBC
     # @ SPRU this all you! 
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    ciphertext = [] 
-    previous_block = iv
+    cipher = AES.new(key, AES.MODE_CCB) 
+    cipher.encrypt(paddedStr)
+    cipher_text = ""
+    # encryption part finish
 
-    for i in range(0, len(paddedStr), AES.block_size):
-        block = paddedStr[i: i + AES.block_size]
-        padded = pad(block, AES.block_size) 
+    print(cipher_text)
+    return cipher_text
 
-        xor_block = bytes(bit1 ^ bit2 for bit1, bit2 in zip(padded, previous_block))
-
-        new_block = cipher.encrypt(xor_block)
-        previous_block = new_block
-        ciphertext += new_block
-
-    print(ciphertext)
-    return ciphertext
-
-def update(ciphertext):
+def update(cipher_text):
     # need to find a way to modify the ciphertext in such a way that, after decryption?/
     # How do i do this?? 
     # need help
-    ciphertext[16] ^= 1 
-    print(ciphertext)
-    return ciphertext
+    cipher_text[16] ^= 1 
+    return 
 
 def verify(decryptStr):
     # decrypt string 
