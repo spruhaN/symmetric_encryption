@@ -21,6 +21,7 @@ def submit(input_string):
 
     # Prepend and append to the main string and apply CBC encryption
     finalStr = "userid=456;userdata=" + insert_str + newStr + ";session-id=31337"
+    print("final", finalStr)
     ciphertext = cbc(finalStr.encode('utf-8'))
 
     return ciphertext
@@ -44,16 +45,18 @@ def cbc(data):
     return ciphertext
 
 def update(cipher_text):
-    
-    # CODE CHANGE HERE
-    text = ';admin=true;    '.encode('utf-8')
-    block_to_change = cipher_text[32:47]
+    desired_result = ';admin=true;    '.encode('utf-8')
+    target_block = cipher_text[48:64]
 
-    delta =  bytes(x ^ y for x, y in zip(block_to_change, text))
-    print("delta", delta)
-    new_block = bytes(x ^ y for x, y in zip(block_to_change, delta))
-    print("new", new_block)
-    new = cipher_text[:32] + new_block + cipher_text[47:]
+    delta =  bytes(x ^ y for x, y in zip(target_block, desired_result))
+    print("delta", delta, "len", len(delta))
+
+    previous_block = ciphertext[32:48] 
+    print("prev", previous_block)
+    new_prev_block = bytes(x ^ y for x, y in zip(previous_block, delta))
+    print("new_prev_block", new_prev_block)
+   
+    new = cipher_text[:32] + new_prev_block + cipher_text[48:]
     return new
 
 def verify(ciphertext):
@@ -61,10 +64,8 @@ def verify(ciphertext):
     cipher = AES.new(key, AES.MODE_CBC, iv)
     decrypted_data = cipher.decrypt(ciphertext)
 
-    original_text = decrypted_data.decode('utf-8')
-
-    print(original_text)
-    return ";admin=true;" in original_text
+    # original_text = decrypted_data.decode('utf-8')
+    return ";admin=true;".encode('utf-8') in decrypted_data
     # parse string for pattern: ";admin=true;"
 
 if __name__ == "__main__":
