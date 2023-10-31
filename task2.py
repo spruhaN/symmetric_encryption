@@ -5,6 +5,7 @@ from Crypto.Util.Padding import pad
 
 key = get_random_bytes(16)
 iv = get_random_bytes(16)
+cipher = AES.new(key, AES.MODE_ECB) # Instance of AES cipher algorithm for ECB
 
 def submit(input_string):
     # URL encode any ‘;’ and ‘=’ characters that appear in the user provided string
@@ -24,11 +25,10 @@ def submit(input_string):
     print("final", finalStr)
     ciphertext = cbc(finalStr.encode('utf-8'))
 
-    return ciphertext
+    return finalStr, ciphertext
 
 def cbc(data):
-    cipher = AES.new(key, AES.MODE_ECB) # Instance of AES cipher algorithm for ECB
-    ciphertext = b''                    # First thing add header to output 
+    ciphertext = b''                
     previous_block = iv
 
     for i in range(0, len(data), AES.block_size):
@@ -44,37 +44,50 @@ def cbc(data):
 
     return ciphertext
 
-def update(cipher_text):
+def update(input_str, cipher_text):
     desired_result = ';admin=true;    '.encode('utf-8')
-    target_block = cipher_text[48:64]
+    target_block = input_str[48:64]
 
     delta =  bytes(x ^ y for x, y in zip(target_block, desired_result))
-    print("delta", delta, "len", len(delta))
 
-    previous_block = ciphertext[32:48] 
-    print("prev", previous_block)
+    # want to change ciphertext to when its XORed with decrupted plaintext
+    previous_block = ciphertext[32:48] # unencrypted text 
     new_prev_block = bytes(x ^ y for x, y in zip(previous_block, delta))
-    print("new_prev_block", new_prev_block)
    
     new = cipher_text[:32] + new_prev_block + cipher_text[48:]
     return new
 
+def decrypt_cbc(ciphertext):
+    previous_block = iv
+    data = b""
+
+    for i in range(0, len(ciphertext), AES.block_size):
+        block = ciphertext[i: i + AES.block_size]
+        decrypted = cipher.decrypt(block)
+        plain_text = bytes(bit1 ^ bit2 for bit1, bit2 in zip(previous_block, decrypted))
+       
+        previous_block = block
+        data += plain_text
+
+    return data
+
 def verify(ciphertext):
     print("verify", ciphertext)
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted_data = cipher.decrypt(ciphertext)
+    # decrypt manually!
+    decrypted_data = decrypt_cbc(ciphertext)
 
-    # original_text = decrypted_data.decode('utf-8')
-    return ";admin=true;".encode('utf-8') in decrypted_data
+    original_text = decrypted_data[48:].decode('utf-8')
+    print("original_text", original_text)
+    return ";admin=true;" in original_text
     # parse string for pattern: ";admin=true;"
 
 if __name__ == "__main__":
-    input = "You’re the man now, dog"
-    ciphertext = submit(input)
+    input_str = "You’re the man now, dog"
+    finalStr, ciphertext = submit(input_str)
 
     result = verify(ciphertext)
     print(result)   # should be false
 
-    modified_cipher = update(ciphertext)
+    modified_cipher = update(finalStr.encode('utf-8'),ciphertext)
     result_new = verify(modified_cipher)
     print(result_new)   # should be true
